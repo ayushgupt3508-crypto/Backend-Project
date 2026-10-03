@@ -1,0 +1,16 @@
+{
+  "name": "big_project_backend",
+  "version": "1.0.0",
+  "description": "a backend project",
+  "keywords": [
+    "javascript",
+    "backend"
+  ],
+  "license": "ISC",
+  "author": "Ayush Gupta",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
