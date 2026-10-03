@@ -8,9 +8,12 @@
   ],
   "license": "ISC",
   "author": "Ayush Gupta",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
   }
 }
