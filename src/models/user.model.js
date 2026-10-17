@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 
 const userSchema = new Schema(
     {
-        user: {
+        username: {
             type: String,
             required: true,
             unique: true,
@@ -53,11 +53,10 @@ const userSchema = new Schema(
     }
 )
 
-userSchema.pre("save", async function (next) {
-    if(this.password.isModified()){
-        this.passwrod = await bcrypt.hash(this.passwrod, 10)
+userSchema.pre("save", async function () {
+    if(this.isModified('password')){
+        this.password = await bcrypt.hash(this.password, 11)
     }
-    next()
 })
 
 userSchema.methods.isCorrectPassword = async function (password) {
