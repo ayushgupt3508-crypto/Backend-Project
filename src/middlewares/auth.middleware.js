@@ -1,6 +1,6 @@
-import { User } from "../models/user.model"
-import { ApiError } from "../utils/ApiError"
-import { asyncHandler } from "../utils/asyncHandler"
+import { User } from "../models/user.model.js"
+import { ApiError } from "../utils/ApiError.js"
+import { asyncHandler } from "../utils/asyncHandler.js"
 import jwt from "jsonwebtoken"
 
 //* NOTE: if a particular filed is not used then itreplace it with _
