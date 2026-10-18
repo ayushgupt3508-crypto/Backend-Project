@@ -231,4 +231,66 @@ const refreshAccessToken = asyncHandler( async (req,res) => {
         )
     )
 })
-export {registerUser, loginUser, logOutUser, refreshAccessToken}
+
+const updatePassword = asyncHandler( async (req, res) => {
+    try {
+        const {oldPassword, newPassword} = req.body
+    
+        if(!oldPassword || !newPassword) {
+            throw new ApiError(401, "Password is required")
+        }
+    
+        const user = await User.findById(req.user?._id)
+        const isPasswordCorrect = await user.isCorrectPassword(oldPassword)
+    
+        if(!isPasswordCorrect) {
+            throw new ApiError(402, "Old Password is not correct")
+        }
+    
+        user.password = newPassword
+        user.save({validateBeforeSave: false})
+    
+        return res
+        .status(200).
+        json(
+            new ApiResponse(201, user, "Password updated successfully")
+        )
+    } catch (error) {
+        new ApiResponse(500,{},"Error occured while updating the password")
+    }
+})
+
+const getCurrentUser = asyncHandler( async (req,res) => {
+    return res
+    .status(200)
+    .json(201, req.user, "Current User fetched successfully")
+})
+
+const updateAccountDetails = asyncHandler( async (req, res) => {
+    try {
+        const {fullname, email} = req.body
+        if(!fullname || !email) {
+            throw new ApiError(401, "Fullname and email are required")
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
+            {
+                $set : {email, fullname}
+            },
+            {new : true}
+        ).select("-password")
+
+        return res
+        .status(200)
+        .json(
+            201,
+            user,
+            "Account details updated successfully"
+        )
+
+    } catch (error) {
+        throw new ApiError(500,"Error occured while updating account details")
+    }
+})
+export {registerUser, loginUser, logOutUser, refreshAccessToken, updatePassword, getCurrentUser, updateAccountDetails}
