@@ -293,4 +293,81 @@ const updateAccountDetails = asyncHandler( async (req, res) => {
         throw new ApiError(500,"Error occured while updating account details")
     }
 })
-export {registerUser, loginUser, logOutUser, refreshAccessToken, updatePassword, getCurrentUser, updateAccountDetails}
+
+const updateUserAvatar = asyncHandler( async (req,res) => {
+    try {
+        const avatarLocalPath = req.file?.path
+    
+        if (!avatarLocalPath) {
+            throw new ApiError(401,"avatar file not found")
+        }
+    
+        const avatar = await uploadOnCloudinary(avatarLocalPath)
+    
+        if(!avatar.url){
+            throw new ApiError(401,"Error occured while uploading on cloudinary")
+        }
+    
+        const user = await User.findByIdAndUpdate(
+            req.user?._id,
+            {
+                $set: {
+                    avatar: avatar.url
+                }
+            },
+            {new : true}
+        ).select("-password")
+    
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(201,user,"Updated user avatar successfully")
+        )
+    } catch (error) {
+        throw new ApiError(500,"Error occured while updating user avatar")
+    }
+})
+
+const updateUserCoverImage = asyncHandler( async (req,res) => {
+    try {
+        const coverImageLocalPath = req.file?.path
+    
+        if (!coverImageLocalPath) {
+            throw new ApiError(401,"coverImage file not found")
+        }
+    
+        const coverImage = await uploadOnCloudinary(coverImageLocalPath)
+    
+        if(!coverImage.url){
+            throw new ApiError(401,"Error occured while uploading on cloudinary")
+        }
+    
+        const user = await User.findByIdAndUpdate(
+            req.user?._id,
+            {
+                $set: {
+                    coverImage: coverImage.url
+                }
+            },
+            {new : true}
+        ).select("-password")
+    
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(201,user,"Updated user coverImage successfully")
+        )
+    } catch (error) {
+        throw new ApiError(500,"Error occured while updating user coverImage")
+    }
+})
+export {registerUser, 
+    loginUser, 
+    logOutUser, 
+    refreshAccessToken, 
+    updatePassword, 
+    getCurrentUser, 
+    updateAccountDetails,
+    updateUserAvatar,
+    updateUserCoverImage
+}
