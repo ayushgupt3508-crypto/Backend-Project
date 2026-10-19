@@ -16,3 +16,6 @@ const subscriptionSchema = new Schema({
 )
 
 export const Subscription = mongoose.model( "Subscription", subscriptionSchema )
+
+//* In database "Subscription" will be stored as "subscriptions"
+//* it is converted into lowerCase and its plural form
