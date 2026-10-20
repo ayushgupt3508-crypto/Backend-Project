@@ -32,7 +32,7 @@ const videoSchema = new Schema(
             default: true
         },
         owner: {
-            tupe: Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "User"
         }
     },
@@ -43,4 +43,4 @@ const videoSchema = new Schema(
 
 videoSchema.plugin(mongooseAggregatePaginate)
 
-export const Video = Schema.model("Video", videoSchema);
+export const Video = mongoose.model("Video", videoSchema);

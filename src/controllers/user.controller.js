@@ -63,8 +63,8 @@ const registerUser = asyncHandler( async (req,res) => {
    // const coverImageLocalPath = req.files?.coverImage[0]?.path
 
     let coverImageLocalPath;
-    if(req.files && Array.isArray(req.files.coverImage &&
-         req.files.coverImage.length > 0)){
+    if(req.files && Array.isArray(req.files.coverImage) &&
+         req.files.coverImage.length > 0){
             coverImageLocalPath = req.files.coverImage[0].path
     }
     if(!avatarLocalPath){
@@ -93,7 +93,7 @@ const registerUser = asyncHandler( async (req,res) => {
     )
 
     if(!createdUser) {
-        throw new ApiError(500), "Something went wrong while registering the user..."
+        throw new ApiError(500, "Something went wrong while registering the user...")
     }
 
     return res.status(201).json(
@@ -249,7 +249,7 @@ const updatePassword = asyncHandler( async (req, res) => {
         }
     
         user.password = newPassword
-        user.save({validateBeforeSave: false})
+        await user.save({validateBeforeSave: false})
     
         return res
         .status(200).
@@ -257,14 +257,14 @@ const updatePassword = asyncHandler( async (req, res) => {
             new ApiResponse(201, user, "Password updated successfully")
         )
     } catch (error) {
-        new ApiResponse(500,{},"Error occured while updating the password")
+        throw new ApiError(500, "Error occured while updating the password")
     }
 })
 
 const getCurrentUser = asyncHandler( async (req,res) => {
     return res
     .status(200)
-    .json(201, req.user, "Current User fetched successfully")
+    .json(new ApiResponse(201, req.user, "Current user fetched successfully"))
 })
 
 const updateAccountDetails = asyncHandler( async (req, res) => {
@@ -285,9 +285,10 @@ const updateAccountDetails = asyncHandler( async (req, res) => {
         return res
         .status(200)
         .json(
+            new ApiResponse(
             201,
             user,
-            "Account details updated successfully"
+            "Account details updated successfully")
         )
 
     } catch (error) {
@@ -373,7 +374,7 @@ const getUserChannelProfile = asyncHandler( async (req,res) => {
     const channel = await User.aggregate([
         {
             $match: {
-                username: username?.toLowercase()
+                username: username?.toLowerCase()
             }
         },
         {
@@ -482,7 +483,7 @@ const getWatchHistory = asyncHandler( async (req,res) => {
     ])
 
     if(!user) {
-        new ApiError(401, "Error occured while fetching watchHistory")
+        throw new ApiError(401, "Error occured while fetching watchHistory")
     }
 
     return res
